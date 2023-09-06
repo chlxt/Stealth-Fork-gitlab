@@ -8,11 +8,11 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import coil.load
 import coil.size.Precision
 import coil.size.Scale
+import com.cosmos.stealth.sdk.data.model.api.BadgeData
 import com.cosmos.unreddit.R
-import com.cosmos.unreddit.data.model.Flair
+import com.cosmos.unreddit.data.model.Badge
 
-@Deprecated("Legacy view")
-class RedditFlairView @JvmOverloads constructor(
+class BadgeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -28,12 +28,12 @@ class RedditFlairView @JvmOverloads constructor(
         orientation = HORIZONTAL
     }
 
-    fun setFlair(flair: Flair) {
+    fun setBadge(badge: Badge) {
         removeAllViews()
 
-        for (data in flair.data) {
-            when (data.second) {
-                Flair.FlairType.TEXT -> {
+        for (data in badge.badgeDataList) {
+            when (data.type) {
+                BadgeData.Type.text -> {
                     val textView = TextView(
                         context,
                         null,
@@ -43,18 +43,18 @@ class RedditFlairView @JvmOverloads constructor(
                         layoutParams = childParams
                         setSingleLine()
                         isHorizontalFadingEdgeEnabled = true
-                        text = data.first
+                        text = data.text
                     }
                     addView(textView)
                 }
-                Flair.FlairType.IMAGE -> {
+                BadgeData.Type.image -> {
                     val imageView = ImageView(context).apply {
                         layoutParams = LayoutParams(
                             LayoutParams.WRAP_CONTENT,
                             flairImageSize
                         )
                     }
-                    imageView.load(data.first) {
+                    imageView.load(data.url) {
                         crossfade(true)
                         scale(Scale.FIT)
                         precision(Precision.AUTOMATIC)

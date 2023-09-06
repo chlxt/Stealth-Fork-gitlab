@@ -12,10 +12,9 @@ import coil.request.ImageRequest
 import coil.size.Precision
 import coil.size.Scale
 import com.cosmos.unreddit.R
-import com.cosmos.unreddit.data.model.Award
+import com.cosmos.unreddit.data.model.Reactions
 
-@Deprecated("Legacy view")
-class AwardView @JvmOverloads constructor(
+class ReactionView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -54,20 +53,20 @@ class AwardView @JvmOverloads constructor(
         orientation = HORIZONTAL
     }
 
-    fun setAwards(awards: List<Award>, totalAwards: Int) {
+    fun setReactions(reactions: Reactions) {
         removeAllViews()
 
         when {
-            awards.size <= AWARD_LIMIT -> {
-                for (i in awards.indices) {
+            reactions.reactions.size <= AWARD_LIMIT -> {
+                for (i in reactions.reactions.indices) {
                     val textView = getTextView(
-                        context.getString(R.string.award_count, awards[i].count),
+                        context.getString(R.string.award_count, reactions.reactions[i].count),
                         i > 0
                     )
 
                     Coil.imageLoader(context).enqueue(
                         ImageRequest.Builder(context).apply {
-                            data(awards[i].icon)
+                            data(reactions.reactions[i].icon)
                             allowHardware(false)
                             target { drawable ->
                                 drawable.setBounds(0, 0, awardImageSize, awardImageSize)
@@ -92,7 +91,7 @@ class AwardView @JvmOverloads constructor(
                         }
                     }
 
-                    imageView.load(awards[i].icon) {
+                    imageView.load(reactions.reactions[i].icon) {
                         crossfade(true)
                         scale(Scale.FIT)
                         precision(Precision.AUTOMATIC)
@@ -102,7 +101,7 @@ class AwardView @JvmOverloads constructor(
                 }
 
                 val textView = getTextView(
-                    context.getString(R.string.award_count, totalAwards),
+                    context.getString(R.string.award_count, reactions.total),
                     true
                 )
 
